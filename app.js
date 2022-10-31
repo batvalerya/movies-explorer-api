@@ -9,7 +9,7 @@ const errorHandler = require('./middlewares/error');
 const { auth } = require('./middlewares/auth');
 
 const { userRoutes } = require('./routes/users');
-// const { movieRoutes } = require('./routes/movies');
+const { movieRoutes } = require('./routes/movies');
 const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
@@ -42,7 +42,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(auth);
 app.use(userRoutes);
-// app.use(movieRoutes);
+app.use(movieRoutes);
 app.use((req, res, next) => {
   next(new NotFoundError(404, 'Страница не найдена'));
 });
