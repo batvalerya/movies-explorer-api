@@ -1,16 +1,17 @@
+require('dotenv').config();
 const express = require('express');
-const { Joi, celebrate, errors } = require('celebrate');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { errors, Joi, celebrate } = require('celebrate');
 const { NotFoundError } = require('./errors/NotFoundError');
-const errorHandler = require('./middlewares/error');
 const { auth } = require('./middlewares/auth');
-
+const errorHandler = require('./middlewares/error');
 const { userRoutes } = require('./routes/users');
 const { movieRoutes } = require('./routes/movies');
 const { login, createUser } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,6 +23,8 @@ app.use(cors({
   ],
   credentials: true,
 }));
+
+app.use(requestLogger);
 
 app.post('/signup', express.json(), celebrate({
   body: Joi.object().keys({
@@ -44,9 +47,10 @@ app.use(auth);
 app.use(userRoutes);
 app.use(movieRoutes);
 app.use((req, res, next) => {
-  next(new NotFoundError(404, 'Страница не найдена'));
+  next(new NotFoundError('Страница не найдена'));
 });
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
