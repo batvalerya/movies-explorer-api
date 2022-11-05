@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const { errors, Joi, celebrate } = require('celebrate');
+const { errors } = require('celebrate');
+const { limiter, DB_URL } = require('./config');
+const { signUpValidator, signInValidator } = require('./validator');
 const { NotFoundError } = require('./errors/NotFoundError');
 const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/error');
@@ -20,26 +22,18 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'https://api.diplom.baturina.nomoredomains.icu/',
+    'http://api.diplom.baturina.nomoredomains.icu/',
   ],
   credentials: true,
 }));
 
 app.use(requestLogger);
+app.use(limiter);
 
-app.post('/signup', express.json(), celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), createUser);
+app.post('/signup', express.json(), signUpValidator, createUser);
 
-app.post('/signin', express.json(), celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-  }),
-}), login);
+app.post('/signin', express.json(), signInValidator, login);
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,7 +49,7 @@ app.use(errors());
 app.use(errorHandler);
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+  await mongoose.connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
