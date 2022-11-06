@@ -5,8 +5,13 @@ const { NotFoundError } = require('../errors/NotFoundError');
 const { ConflictError } = require('../errors/ConflictError');
 const { BadRequestError } = require('../errors/BadRequestError');
 const { UnauthorizedError } = require('../errors/UnauthorizedError');
-const { DocumentNotFoundError } = require('../errors/DocumentNotFoundError');
 const { OK } = require('../constants');
+const {
+  ConflictErrorMessage,
+  BadRequestErrorMessage,
+  NotFoundUserErrorMessage,
+  UnauthorizedErrorMessage,
+} = require('../constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -35,12 +40,14 @@ const updateUser = (req, res, next) => {
       if (user) {
         res.status(OK).send(user);
       } else {
-        next(new NotFoundError('Пользователь с указанным id не найден'));
+        next(new NotFoundError(NotFoundUserErrorMessage));
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new NotFoundError('Пользователь с указанным id не найден'));
+        next(new BadRequestError(BadRequestErrorMessage));
+      } else if (err.code === 11000) {
+        next(new ConflictError(ConflictErrorMessage));
       } else {
         next(err);
       }
@@ -62,9 +69,9 @@ const createUser = (req, res, next) => {
         .then((user) => res.send({ data: user }))
         .catch((err) => {
           if (err.code === 11000) {
-            next(new ConflictError('Логин занят'));
+            next(new ConflictError(ConflictErrorMessage));
           } else if (err.name === 'ValidationError') {
-            next(new BadRequestError('Некорректный запрос'));
+            next(new BadRequestError(BadRequestErrorMessage));
           } else {
             next(err);
           }
@@ -95,15 +102,15 @@ const login = (req, res, next) => {
               sameSite: true,
             });
 
-            res.send({ token });
+            res.send({ token }).end();
           } else {
-            next(new UnauthorizedError('Неправильный логин или пароль'));
+            next(new UnauthorizedError(UnauthorizedErrorMessage));
           }
         });
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        next(new DocumentNotFoundError('Неправильный логин или пароль'));
+        next(new UnauthorizedError(UnauthorizedErrorMessage));
       } else {
         next(err);
       }
