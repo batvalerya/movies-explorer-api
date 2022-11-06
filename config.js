@@ -5,9 +5,7 @@ const limiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per `window` (10 minutes)
 });
 
-const DB_NAME = process.env.NODE_ENV === 'production' ? process.env.DB_NAME : 'moviesdb';
-
-const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+const DB_URL = process.env.NODE_ENV === 'production' ? process.env.DB_URL : 'mongodb://localhost:27017/moviesdb';
 
 module.exports = {
   limiter,
