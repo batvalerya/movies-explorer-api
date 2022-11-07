@@ -8,11 +8,13 @@ const {
   NotFoundMovieErrorMessage,
   ForbiddenErrorMessage,
   RemoveMovieSuccess,
+  BadRequestErrorMessage,
 } = require('../constants');
 
 const getMovies = (req, res, next) => {
+  const owner = req.user._id;
   try {
-    Movie.find({})
+    Movie.find({ owner })
       .then((movies) => {
         res.status(OK).send(movies);
       });
@@ -28,7 +30,7 @@ const createMovie = async (req, res, next) => {
     res.status(OK).send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError(BadRequestMovieErrorMessage));
+      next(new BadRequestError(BadRequestErrorMessage));
     } else {
       next(err);
     }

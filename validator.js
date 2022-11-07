@@ -2,7 +2,7 @@ const { isURL } = require('validator');
 const { Joi, celebrate } = require('celebrate');
 const { UrlErrorMessage } = require('./constants');
 
-const valiateURL = (value) => {
+const validateURL = (value) => {
   if (!isURL(value, { require_protocol: true })) {
     throw new Error(UrlErrorMessage);
   }
@@ -38,9 +38,9 @@ const createMovieValidator = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().custom(valiateURL),
-    trailerLink: Joi.string().required().custom(valiateURL),
-    thumbnail: Joi.string().required().custom(valiateURL),
+    image: Joi.string().required().custom(validateURL),
+    trailerLink: Joi.string().required().custom(validateURL),
+    thumbnail: Joi.string().required().custom(validateURL),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -54,7 +54,6 @@ const deleteMovieByIdValidator = celebrate({
 });
 
 module.exports = {
-  valiateURL,
   signUpValidator,
   signInValidator,
   updateUserValidator,

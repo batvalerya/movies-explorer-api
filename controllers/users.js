@@ -117,9 +117,18 @@ const login = (req, res, next) => {
     });
 };
 
+const logout = (req, res) => {
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: true,
+  })
+    .status(OK).send({ message: 'JWT из куки удален' });
+};
+
 module.exports = {
   getUserInfo,
   updateUser,
   createUser,
   login,
+  logout,
 };

@@ -9,7 +9,7 @@ const { errors } = require('celebrate');
 const { limiter, DB_URL } = require('./config');
 const errorHandler = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const routers = require('./routes/index');
+const routers = require('./routes');
 
 const { PORT = 3000 } = process.env;
 
