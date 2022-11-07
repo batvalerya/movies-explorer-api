@@ -17,6 +17,7 @@ const NotFoundPageErrorMessage = 'Страница не найдена';
 const RemoveMovieSuccess = 'Фильм удален';
 const ServerErrorMessage = 'На сервере произошла ошибка';
 const UrlErrorMessage = 'Неправильный формат ссылки';
+const RemoveJwtSuccessMessage = 'JWT из куки удален';
 
 module.exports = {
   OK,
@@ -37,4 +38,5 @@ module.exports = {
   RemoveMovieSuccess,
   ServerErrorMessage,
   UrlErrorMessage,
+  RemoveJwtSuccessMessage,
 };

@@ -11,6 +11,7 @@ const {
   BadRequestErrorMessage,
   NotFoundUserErrorMessage,
   UnauthorizedErrorMessage,
+  RemoveJwtSuccessMessage,
 } = require('../constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -122,7 +123,7 @@ const logout = (req, res) => {
     httpOnly: true,
     sameSite: true,
   })
-    .status(OK).send({ message: 'JWT из куки удален' });
+    .status(OK).send({ message: RemoveJwtSuccessMessage });
 };
 
 module.exports = {
