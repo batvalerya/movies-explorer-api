@@ -12,11 +12,11 @@ const { NotFoundPageErrorMessage } = require('../constants');
 
 router.post('/signup', express.json(), signUpValidator, createUser);
 router.post('/signin', express.json(), signInValidator, login);
-router.get('/signout', express.json(), logout);
 
 router.use(auth);
 router.use('/', userRoutes);
 router.use('/', movieRoutes);
+router.get('/signout', express.json(), logout);
 
 router.use((req, res, next) => {
   next(new NotFoundError(NotFoundPageErrorMessage));
