@@ -19,10 +19,10 @@ app.use(helmet());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://api.diplom.baturina.nomoredomains.icu/',
-    'http://api.diplom.baturina.nomoredomains.icu/',
-    'http://diplom.baturina.nomoredomains.icu/',
-    'https://diplom.baturina.nomoredomains.icu/',
+    'https://api.diplom.baturina.nomoredomains.icu',
+    'http://api.diplom.baturina.nomoredomains.icu',
+    'https://diplom.baturina.nomoredomains.icu',
+    'http://diplom.baturina.nomoredomains.icu',
   ],
   credentials: true,
 }));
