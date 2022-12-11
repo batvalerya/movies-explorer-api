@@ -21,8 +21,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://api.diplom.baturina.nomoredomains.icu/',
     'http://api.diplom.baturina.nomoredomains.icu/',
-    'https://diplom.baturina.nomoredomains.icu/',
     'http://diplom.baturina.nomoredomains.icu/',
+    'https://diplom.baturina.nomoredomains.icu/',
   ],
   credentials: true,
 }));
