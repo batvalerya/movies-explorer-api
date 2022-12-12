@@ -37,38 +37,15 @@ const createMovie = async (req, res, next) => {
   }
 };
 
-// const deleteMovieById = (req, res, next) => {
-//   Movie.findById(req.params._id)
-//     .orFail(new NotFoundError(NotFoundMovieErrorMessage))
-//     .then((movie) => {
-//       if (movie.owner._id.toString() !== req.user._id) {
-//         return next(new ForbiddenError(ForbiddenErrorMessage));
-//       }
-//       return movie.remove()
-//         .then(() => res.send({ message: RemoveMovieSuccess }));
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequestError(BadRequestMovieErrorMessage));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
 const deleteMovieById = (req, res, next) => {
-  const { movieId } = req.params;
-  const userId = req.user._id;
-  Movie.findOne({ movieId, userId })
+  Movie.findById(req.params._id)
     .orFail(new NotFoundError(NotFoundMovieErrorMessage))
     .then((movie) => {
       if (movie.owner._id.toString() !== req.user._id) {
         return next(new ForbiddenError(ForbiddenErrorMessage));
       }
-      else {
-        Movie.findOneAndRemove({ movieId, userId })
-          .then(() => res.send({ message: RemoveMovieSuccess }));
-      }
+      return movie.remove()
+        .then(() => res.send({ message: RemoveMovieSuccess }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
